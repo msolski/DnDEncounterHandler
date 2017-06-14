@@ -14,7 +14,8 @@ The DM needs some mystery too.*/
 public class PlayerPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	//How about a gridlayout?
 	public PlayerPanel(String name){
 		super();
 		this.setSize(WIDTH, HEIGHT-20);

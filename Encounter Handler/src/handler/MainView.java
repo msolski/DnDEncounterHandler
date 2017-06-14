@@ -18,10 +18,10 @@ public class MainView {
 	JFrame frame;
 	
 	public static void main(String[] args) {
-		MainView window = new MainView();
-		window.frame.setSize(WIDTH, HEIGHT);
-	}
-	
+        MainView window = new MainView();
+        window.frame.setSize(WIDTH, HEIGHT);
+    }
+
 	public MainView(){
 		//Initialize main window frame and layout
 		frame = new JFrame("Michael's too lazy to use a pencil and paper simulator v0.1");
@@ -32,6 +32,7 @@ public class MainView {
 		JMenu newPlayerMNU = new JMenu("New Player");
 		
 		//Adding a new player just creates a panel with the player's name
+		//How about making a gridlayout with adding a new row with every thing?
 		newPlayerMNU.addMenuListener(new MenuListener() {
 		    @Override
 		    public void menuSelected(MenuEvent e) {
