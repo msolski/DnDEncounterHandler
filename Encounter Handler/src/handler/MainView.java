@@ -8,6 +8,7 @@ import javax.swing.event.MenuListener;
 /* TODO:
  * Add delete button (only for NPCs?)
  * Add roll-initiative thing
+ * Turn the menu into buttons
  * Add more detail to NPC panel(?)
  * Add Re-ordering(?)
  */
@@ -18,8 +19,7 @@ public class MainView {
 	public static final short WIDTH = 600; //Width of window
 	public static final short HEIGHT = 105; //Height of each panel
 	private static ArrayList<JPanel> chars; //List of characters
-	
-	JFrame frame;
+	JFrame frame; //The frame
 	
 	public static void main(String[] args) {
         MainView window = new MainView();
@@ -30,11 +30,10 @@ public class MainView {
 		chars = new ArrayList<>();
 
 		//Initialize main window frame and layout
-		frame = new JFrame("Michael's too lazy to use a pencil and paper simulator v0.1");
+		frame = new JFrame("Michael's too lazy to use a pencil and paper simulator v0.5");
 		frame.setLayout(new GridLayout(1,1));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		//Menu bar - TODO: Maybe make these not on a menu? Kinda finicky
+
 		JMenuBar menuBar = new JMenuBar();
 		JMenu newPlayerMNU = new JMenu("New Player");
 		JMenu newNpcMNU = new JMenu("New NPC");
@@ -47,7 +46,7 @@ public class MainView {
 		    public void menuSelected(MenuEvent e) {
 		    	String playerName = JOptionPane.showInputDialog("Player name");
 
-		    	if(playerName != null) {
+		    	if(playerName != null && !playerName.equals("")) {
 					chars.add(new PlayerPanel(playerName));
 					frame.setSize(WIDTH, HEIGHT * chars.size());
 					frame.setLayout(new GridLayout(chars.size(), 1));
@@ -68,12 +67,13 @@ public class MainView {
 		    public void menuCanceled(MenuEvent e) {}
 		});
 
+		//Do the same thing with NPCs
 		newNpcMNU.addMenuListener(new MenuListener() {
 			@Override
 			public void menuSelected(MenuEvent e) {
 				String npcName = JOptionPane.showInputDialog("NPC name");
 
-				if(npcName != null) {
+				if(npcName != null && !npcName.equals("")) {
 					chars.add(new EnemyPanel(npcName));
 					frame.setSize(WIDTH, HEIGHT * chars.size());
 					frame.setLayout(new GridLayout(chars.size(), 1));
@@ -94,12 +94,64 @@ public class MainView {
 			public void menuCanceled(MenuEvent e) {}
 		});
 
+		rollInitMNU.addMenuListener(new MenuListener() {
+			@Override
+			public void menuSelected(MenuEvent e) {
+				rollInitiative();
+			}
+			//Unused
+			@Override
+			public void menuDeselected(MenuEvent e) {}
+			@Override
+			public void menuCanceled(MenuEvent e) {}
+		});
+
 		menuBar.add(newPlayerMNU);
 		menuBar.add(newNpcMNU);
 		menuBar.add(rollInitMNU);
 		
 		//Add everything to the frame
 		frame.setJMenuBar(menuBar);
+		frame.setVisible(true);
+	}
+
+	// TODO: FIX!!!!!!!!!!!
+	private void rollInitiative(){
+		int[] initArray = new int[chars.size()];
+
+		//Get the initiative rolls for each character
+		for(int i=0;i<chars.size();i++){
+			initArray[i] = Integer.valueOf(JOptionPane.showInputDialog(chars.get(i).getName()+"'s roll"));
+		}
+
+		//Do a crude implementation of insertion(?) sort
+		int tempInt;
+		JPanel tempPanel;
+		for(int i=1;i<chars.size();i++){
+			for(int j=1;j>0;j--){
+
+				if(initArray[j]<initArray[j-1]){
+					tempPanel = chars.get(j);
+					tempInt = initArray[j];
+
+					chars.add(j, chars.get(j-1));
+					initArray[j] = initArray[j-1];
+
+					chars.add(j-1, tempPanel);
+					initArray[j-1] = tempInt;
+				}
+			}
+		}
+
+		//Now put them all back on the panel in the new order
+		frame.setSize(WIDTH, HEIGHT * chars.size());
+		frame.setLayout(new GridLayout(chars.size(), 1));
+
+		for (int i = 0; i < chars.size(); i++)
+			frame.add(chars.get(i));
+
+		frame.revalidate();
+		frame.validate();
 		frame.setVisible(true);
 	}
 }

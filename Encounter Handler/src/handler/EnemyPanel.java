@@ -12,6 +12,7 @@ Covers the name, HP, AC and other notes the DM wants to add like conditions or w
 public class EnemyPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
+    private String charName;
 
     public EnemyPanel(String name){
         super();
@@ -19,10 +20,11 @@ public class EnemyPanel extends JPanel {
         this.setSize(WIDTH, HEIGHT-20);
         this.setLayout(new GridLayout(1,3));
         this.setOpaque(true);
-        this.setBackground(new Color(255, 150, 110));
+        this.setBackground(new Color(250, 150, 120));
         this.setVisible(true);
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
+        this.charName = name;
         JTextField nameField = new JTextField("\n"+name);
         nameField.setEditable(false);
 
@@ -48,5 +50,10 @@ public class EnemyPanel extends JPanel {
         this.add(nameField);
         this.add(statsPanel);
         this.add(notesField);
+    }
+
+    @Override
+    public String getName(){
+        return charName;
     }
 }
