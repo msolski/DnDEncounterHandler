@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 /* TODO:
- * Add delete button (only for NPCs?)
- * Add roll-initiative thing
  * Turn the menu into buttons
  * Add more detail to NPC panel(?)
  * Add Re-ordering(?)
@@ -137,43 +135,41 @@ public class MainView {
 		frame.setVisible(true);
 	}
 
-	// TODO: FIX!!!!!!!!!!!
 	private void rollInitiative(){
-		int[] initArray = new int[chars.size()];
-
 		//Get the initiative rolls for each character
-		for(int i=0;i<chars.size();i++){
-			initArray[i] = Integer.valueOf(JOptionPane.showInputDialog(chars.get(i).getName()+"'s roll"));
+		//set/getDebugGraphicsOptions is setting/getting initiative values
+		//It's like that because the arrayList is of JPanels and I'm too lazy to make it better
+		for(int x=0;x<chars.size();x++){
+			chars.get(x).setDebugGraphicsOptions(Integer.valueOf(JOptionPane.showInputDialog(chars.get(x).getName()+"'s roll")));
 		}
 
-		//Do a crude implementation of insertion(?) sort
-		int tempInt;
-		JPanel tempPanel;
+		//Do a crude implementation of insertion sort
+		JPanel temp;
 		for(int i=1;i<chars.size();i++){
-			for(int j=1;j>0;j--){
-
-				if(initArray[j]<initArray[j-1]){
-					tempPanel = chars.get(j);
-					tempInt = initArray[j];
-
-					chars.add(j, chars.get(j-1));
-					initArray[j] = initArray[j-1];
-
-					chars.add(j-1, tempPanel);
-					initArray[j-1] = tempInt;
+			for(int j=i;j>0;j--){
+				if(chars.get(j).getDebugGraphicsOptions() > chars.get(j-1).getDebugGraphicsOptions()){
+					temp = chars.get(j);
+					chars.set(j,chars.get(j-1));
+					chars.set(j-1,temp);
 				}
 			}
+		}
+
+		//Remove everything
+		for(int y=0;y<chars.size();y++){
+			frame.remove(chars.get(y));
 		}
 
 		//Now put them all back on the panel in the new order
 		frame.setSize(WIDTH, HEIGHT * chars.size());
 		frame.setLayout(new GridLayout(chars.size(), 1));
 
-		for (int i = 0; i < chars.size(); i++)
-			frame.add(chars.get(i));
+		for (int z = 0; z < chars.size(); z++)
+			frame.add(chars.get(z));
 
 		frame.revalidate();
 		frame.validate();
 		frame.setVisible(true);
+
 	}
 }

@@ -15,6 +15,7 @@ public class PlayerPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private String charName;
+	public int initiative;
 
 	public PlayerPanel(String name){
 		super();
@@ -22,9 +23,10 @@ public class PlayerPanel extends JPanel {
 		this.setSize(WIDTH, HEIGHT-20);
 		this.setLayout(new GridLayout(1,3));
 		this.setOpaque(true);
-		this.setBackground(new Color(200, 200, 250));
+		//this.setBackground(new Color(200, 200, 250));
 		this.setVisible(true);
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.initiative = 0;
 
 		this.charName = name;
 		JLabel nameField = new JLabel("\n"+name);
@@ -39,8 +41,15 @@ public class PlayerPanel extends JPanel {
 		this.add(notesField2);
 	}
 
+	//Overriding shit because the arraylist is with an ancestor class
 	@Override
 	public String getName(){
 		return charName;
 	}
+
+	//I really shouldn't be doing this
+	@Override
+	public int getDebugGraphicsOptions() {return initiative;}
+	@Override
+	public void setDebugGraphicsOptions(int i) {initiative = i;}
 }

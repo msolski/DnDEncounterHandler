@@ -15,6 +15,7 @@ public class EnemyPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private String charName;
+    private int initiative;
 
     public EnemyPanel(String name){
         super();
@@ -25,6 +26,7 @@ public class EnemyPanel extends JPanel {
         this.setBackground(new Color(250, 150, 120));
         this.setVisible(true);
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.initiative = 0;
 
         //Name and delete button
         this.charName = name;
@@ -75,8 +77,15 @@ public class EnemyPanel extends JPanel {
         this.add(notesField);
     }
 
+    //Overriding shit because the arraylist is with an ancestor class
     @Override
     public String getName(){
         return charName;
     }
+
+    //I really shouldn't be doing this
+    @Override
+    public int getDebugGraphicsOptions() {return initiative;}
+    @Override
+    public void setDebugGraphicsOptions(int i) {initiative = i;}
 }
