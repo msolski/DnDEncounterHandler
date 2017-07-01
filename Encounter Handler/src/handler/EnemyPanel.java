@@ -4,6 +4,8 @@ package handler;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /*
 NPC information panel, to be added onto the window.
@@ -24,19 +26,40 @@ public class EnemyPanel extends JPanel {
         this.setVisible(true);
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
+        //Name and delete button
         this.charName = name;
-        JTextField nameField = new JTextField("\n"+name);
-        nameField.setEditable(false);
 
+        JButton deleteButton = new JButton("X");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                MainView.removeChar(charName);
+            }
+        });
+
+        JPanel namePanel = new JPanel();
+        namePanel.setLayout(new GridLayout(3,1));
+
+        JLabel nameField = new JLabel(name);
+
+        JPanel deletePanel = new JPanel();
+        deletePanel.setLayout(new GridLayout(1,3));
+        deletePanel.add(new JPanel());
+        deletePanel.add(new JPanel());
+        deletePanel.add(deleteButton);
+
+        namePanel.add(new JPanel());
+        namePanel.add(nameField);
+        namePanel.add(deletePanel);
+
+        //Stats and notes
         JPanel statsPanel = new JPanel();
         statsPanel.setLayout(new GridLayout(2,2));
 
-        JTextField hpText = new JTextField("HP");
-        hpText.setEditable(false);
+        JLabel hpText = new JLabel("HP");
         JTextField hpField = new JTextField();
 
-        JTextField acText = new JTextField("AC");
-        acText.setEditable(false);
+        JLabel acText = new JLabel("AC");
         JTextField acField = new JTextField();
 
         statsPanel.add(hpText);
@@ -47,7 +70,7 @@ public class EnemyPanel extends JPanel {
         JTextArea notesField = new JTextArea("Conditions/Resistances:");
         notesField.setLineWrap(true);
 
-        this.add(nameField);
+        this.add(namePanel);
         this.add(statsPanel);
         this.add(notesField);
     }

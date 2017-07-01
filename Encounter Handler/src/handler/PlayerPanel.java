@@ -27,8 +27,7 @@ public class PlayerPanel extends JPanel {
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		this.charName = name;
-		JTextField nameField = new JTextField("\n"+name);
-		nameField.setEditable(false);
+		JLabel nameField = new JLabel("\n"+name);
 
 		JTextArea notesField1 = new JTextArea("Notes:");
 		notesField1.setLineWrap(true);

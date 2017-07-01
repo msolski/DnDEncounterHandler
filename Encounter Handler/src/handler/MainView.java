@@ -19,7 +19,7 @@ public class MainView {
 	public static final short WIDTH = 600; //Width of window
 	public static final short HEIGHT = 105; //Height of each panel
 	private static ArrayList<JPanel> chars; //List of characters
-	JFrame frame; //The frame
+	private static JFrame frame; //The frame
 	
 	public static void main(String[] args) {
         MainView window = new MainView();
@@ -112,6 +112,28 @@ public class MainView {
 		
 		//Add everything to the frame
 		frame.setJMenuBar(menuBar);
+		frame.setVisible(true);
+	}
+
+	public static void removeChar(String name){
+		for(int i=0;i<chars.size();i++) {
+			if (chars.get(i).getName().equals(name)) {
+				frame.remove(chars.get(i));
+				chars.remove(i);
+			}
+		}
+
+		if(chars.size() > 0)
+			frame.setSize(WIDTH, HEIGHT * chars.size());
+
+		frame.setLayout(new GridLayout(chars.size(), 1));
+
+		//Re-add all the panels
+		for (int j = 0; j < chars.size(); j++)
+			frame.add(chars.get(j));
+
+		frame.revalidate();
+		frame.validate();
 		frame.setVisible(true);
 	}
 
