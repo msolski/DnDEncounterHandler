@@ -1,12 +1,13 @@
 package handler;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 /* TODO:
- * Turn the menu into buttons
  * Add more detail to NPC panel(?)
  * Add Re-ordering(?)
  */
@@ -16,6 +17,8 @@ public class MainView {
 
 	public static final short WIDTH = 600; //Width of window
 	public static final short HEIGHT = 105; //Height of each panel
+	public static final short BUTTONHEIGHT = 50; //Height of the button panel
+	public static JPanel buttonPanel; //Panel with the buttons
 	private static ArrayList<JPanel> chars; //List of characters
 	private static JFrame frame; //The frame
 	
@@ -28,26 +31,34 @@ public class MainView {
 		chars = new ArrayList<>();
 
 		//Initialize main window frame and layout
-		frame = new JFrame("Michael's too lazy to use a pencil and paper simulator v0.5");
+		frame = new JFrame("Michael's too lazy to use a pencil and paper simulator v1.1");
 		frame.setLayout(new GridLayout(1,1));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JMenuBar menuBar = new JMenuBar();
-		JMenu newPlayerMNU = new JMenu("New Player");
-		JMenu newNpcMNU = new JMenu("New NPC");
-		JMenu rollInitMNU = new JMenu("Roll Initiative");
-		
+		//Buttons
+		buttonPanel = new JPanel();
+		buttonPanel.setSize(WIDTH,BUTTONHEIGHT);
+		buttonPanel.setLayout(new GridLayout(1,3));
+
+		JButton newPlayerBTN = new JButton("New Player");
+		JButton newNpcBTN = new JButton("New NPC");
+		JButton rollInitBTN = new JButton("Roll Initiative");
+
+		buttonPanel.add(newPlayerBTN);
+		buttonPanel.add(newNpcBTN);
+		buttonPanel.add(rollInitBTN);
+
 		//Add a new player by replacing the girdLayout with a bigger one
 		//There's definitely a much better way to do this but I'm lazy
-		newPlayerMNU.addMenuListener(new MenuListener() {
-		    @Override
-		    public void menuSelected(MenuEvent e) {
-		    	String playerName = JOptionPane.showInputDialog("Player name");
+		newPlayerBTN.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				String playerName = JOptionPane.showInputDialog("Player name");
 
-		    	if(playerName != null && !playerName.equals("")) {
+				if(playerName != null && !playerName.equals("")) {
 					chars.add(new PlayerPanel(playerName));
-					frame.setSize(WIDTH, HEIGHT * chars.size());
-					frame.setLayout(new GridLayout(chars.size(), 1));
+					frame.setSize(WIDTH, HEIGHT * chars.size()+BUTTONHEIGHT);
+					frame.setLayout(new GridLayout(chars.size()+1, 1));
 
 					//Re-add all the panels
 					for (int i = 0; i < chars.size(); i++)
@@ -57,24 +68,18 @@ public class MainView {
 					frame.validate();
 					frame.setVisible(true);
 				}
-		    }
-		    //Unused
-		    @Override
-		    public void menuDeselected(MenuEvent e) {}
-		    @Override
-		    public void menuCanceled(MenuEvent e) {}
+			}
 		});
 
-		//Do the same thing with NPCs
-		newNpcMNU.addMenuListener(new MenuListener() {
+		newNpcBTN.addActionListener(new ActionListener() {
 			@Override
-			public void menuSelected(MenuEvent e) {
+			public void actionPerformed(ActionEvent actionEvent) {
 				String npcName = JOptionPane.showInputDialog("NPC name");
 
 				if(npcName != null && !npcName.equals("")) {
 					chars.add(new EnemyPanel(npcName));
-					frame.setSize(WIDTH, HEIGHT * chars.size());
-					frame.setLayout(new GridLayout(chars.size(), 1));
+					frame.setSize(WIDTH, HEIGHT * chars.size()+BUTTONHEIGHT);
+					frame.setLayout(new GridLayout(chars.size()+1, 1));
 
 					//Re-add all the panels
 					for (int i = 0; i < chars.size(); i++)
@@ -85,31 +90,17 @@ public class MainView {
 					frame.setVisible(true);
 				}
 			}
-			//Unused
-			@Override
-			public void menuDeselected(MenuEvent e) {}
-			@Override
-			public void menuCanceled(MenuEvent e) {}
 		});
 
-		rollInitMNU.addMenuListener(new MenuListener() {
+		rollInitBTN.addActionListener(new ActionListener() {
 			@Override
-			public void menuSelected(MenuEvent e) {
+			public void actionPerformed(ActionEvent actionEvent) {
 				rollInitiative();
 			}
-			//Unused
-			@Override
-			public void menuDeselected(MenuEvent e) {}
-			@Override
-			public void menuCanceled(MenuEvent e) {}
 		});
 
-		menuBar.add(newPlayerMNU);
-		menuBar.add(newNpcMNU);
-		menuBar.add(rollInitMNU);
-		
 		//Add everything to the frame
-		frame.setJMenuBar(menuBar);
+		frame.add(buttonPanel);
 		frame.setVisible(true);
 	}
 
@@ -122,9 +113,9 @@ public class MainView {
 		}
 
 		if(chars.size() > 0)
-			frame.setSize(WIDTH, HEIGHT * chars.size());
+			frame.setSize(WIDTH, HEIGHT * chars.size()+BUTTONHEIGHT);
 
-		frame.setLayout(new GridLayout(chars.size(), 1));
+		frame.setLayout(new GridLayout(chars.size()+1, 1));
 
 		//Re-add all the panels
 		for (int j = 0; j < chars.size(); j++)
@@ -161,8 +152,11 @@ public class MainView {
 		}
 
 		//Now put them all back on the panel in the new order
-		frame.setSize(WIDTH, HEIGHT * chars.size());
-		frame.setLayout(new GridLayout(chars.size(), 1));
+		frame.setSize(WIDTH, HEIGHT * chars.size()+BUTTONHEIGHT);
+		frame.setLayout(new GridLayout(chars.size()+1, 1));
+
+		//Never forget the buttonPanel
+		frame.add(buttonPanel);
 
 		for (int z = 0; z < chars.size(); z++)
 			frame.add(chars.get(z));
